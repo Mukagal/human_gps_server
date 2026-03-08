@@ -1,1 +1,15 @@
 .env
+
+.venv/
+
+__pycache__/
+*.pyc
+src/__pycache__/
+src/conversations/__pycache__/
+src/db/__pycache__/
+src/groups/__pycache__/
+src/messages/__pycache__/
+src/post/__pycache__/
+src/story/__pycache__/
+src/users/__pycache__/
+
