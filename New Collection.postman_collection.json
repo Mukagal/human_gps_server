@@ -1,0 +1,935 @@
+{
+  "info": {
+    "_postman_id": "1b11263c-0e41-40e8-8b46-0682bca4e820",
+    "name": "New Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52442025",
+    "_collection_link": "https://go.postman.co/collection/52442025-1b11263c-0e41-40e8-8b46-0682bca4e820?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"Naruto\",\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users?skip=0&limit=10",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\":\"SASUKEEEE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/6",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/?user_id=5",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "5",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "User manager"
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "Get Conversation",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/conversations/4",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "conversations",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Conversations",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/conversations?user_a=2&user_b=6",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "conversations"
+              ],
+              "query": [
+                {
+                  "key": "user_a",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "user_b",
+                  "value": "6",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/conversations",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "conversations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Conversation with Messages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/conversations/1/full",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "conversations",
+                "1",
+                "full"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inbox",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/inbox",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "inbox"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Conversations Manipulation"
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sender_id\": 6,\r\n  \"content\": \"I'm Naruto Uzumaki, DATTEBAYO\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/conversations/3/messages",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "conversations",
+                "3",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Messages",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sender_id\": 6,\r\n  \"content\": \"I'm Naruto Uzumaki, DATTEBAYO\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/conversations/3/messages?limit=20",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "conversations",
+                "3",
+                "messages"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Message",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"I'm Naruto Uzumaki, And I will become Hokage\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/messages/3?sender_id=6",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                "3"
+              ],
+              "query": [
+                {
+                  "key": "sender_id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Message",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"I'm Naruto Uzumaki, And I will become Hokage\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/messages/3?sender_id=6",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                "3"
+              ],
+              "query": [
+                {
+                  "key": "sender_id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Feed",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts?skip=0&limit=20",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/5",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Post manager"
+    },
+    {
+      "name": "Stories",
+      "item": [
+        {
+          "name": "Get Active Stories",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/stories",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "stories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Story",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"image_path\": \"string\",\r\n  \"caption\": \"Second  day as Hokage\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/stories",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "stories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Stories",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/stories/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "stories",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Stories Manager"
+    },
+    {
+      "name": "Group",
+      "item": [
+        {
+          "name": "Get Group",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"image_path\": \"string\",\r\n  \"caption\": \"Second  day as Hokage\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/groups/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Group",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/groups/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Group",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/6/groups",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "6",
+                "groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Message to Group",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sender_id\": 6,\r\n  \"content\": \"Message to group from Naruto\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/groups/3/messages",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "3",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Group Messages",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/groups/3/messages",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "3",
+                "messages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add new Member to Group",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/groups/3/members/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "3",
+                "members",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Member from Group",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/groups/3/members/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "3",
+                "members",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Group Manager"
+    }
+  ]
+}
