@@ -12,7 +12,7 @@ from ..users.utils import create_access_token, verify_password
 
 from ..db.main import get_session
 from .UserService import UserService
-from .UserSchemas import UserCreate, UserUpdate, UserLogin, UserModel
+from .UserSchemas import UserCreate, UserPublic, UserUpdate, UserLogin, UserModel
 from ..db.models import User
 
 user_router = APIRouter()
@@ -119,3 +119,13 @@ async def delete_user(
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": f"User witb id {current_user.id} Deleted"}
 
+@user_router.get("/users/{user_id}/profile", response_model=UserPublic)
+async def get_user_profile(
+    user_id: int,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user)  
+):
+    user = await user_service.get_user(user_id, session)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

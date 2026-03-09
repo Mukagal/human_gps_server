@@ -29,3 +29,11 @@ class UserModel(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserPublic(BaseModel):
+    id: int
+    username: str
+    profile_image_path: Optional[str] = None
+
+    class Config:
+        from_attributes = True
