@@ -7,6 +7,13 @@ from .groups.GroupRoutes import group_router
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from .db.main import initdb
+from .errors import (
+    AppException,
+    app_exception_handler,
+    validation_exception_handler,
+    generic_exception_handler
+)
+from fastapi.exceptions import RequestValidationError
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -22,6 +29,9 @@ app = FastAPI(
     version= version,
     lifespan=lifespan
 )
+app.add_exception_handler(AppException, app_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, generic_exception_handler)
 
 app.include_router(user_router, prefix=f"/api/{version}", tags=["users"])
 app.include_router(conversation_router, prefix=f"/api/{version}", tags=["conversations"])

@@ -2,6 +2,7 @@ from sqlmodel import select
 from fastapi import HTTPException
 from ..db.models import Conversation
 from sqlmodel.ext.asyncio.session import AsyncSession
+from ..errors import SelfConversationError
 
 
 class ConversationService:
@@ -9,7 +10,7 @@ class ConversationService:
     async def create_conversation(self, user_a: int, user_b: int, session: AsyncSession):
 
         if user_a == user_b:
-            raise HTTPException(status_code=400, detail="Cannot chat with yourself")
+            raise SelfConversationError
 
         user1_id = min(user_a, user_b)
         user2_id = max(user_a, user_b)

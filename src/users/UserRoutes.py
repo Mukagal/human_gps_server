@@ -1,11 +1,10 @@
 from datetime import timedelta
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
 from fastapi.responses import JSONResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import List
 
-from src.users.dependencies import get_current_user
+from ..users.dependencies import get_current_user
 
 from ..config import Config
 from ..users.utils import create_access_token, verify_password
@@ -126,6 +125,21 @@ async def get_user_profile(
     current_user: User = Depends(get_current_user)  
 ):
     user = await user_service.get_user(user_id, session)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@user_router.post("/users/me/profile-image", response_model=UserModel)
+async def upload_profile_image(
+    file: UploadFile = File(...),
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user)
+):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File must be an image")
+    
+    user = await user_service.upload_profile_image(current_user.id, file, session)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

@@ -85,15 +85,77 @@ class Post(SQLModel, table=True):
     __tablename__ = "posts"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-
     author_id: int = Field(foreign_key="users.id")
-
     content: str
     image_path: Optional[str] = None
 
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
     )
+
+    likes: List["PostLike"] = Relationship(
+        back_populates="post",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    comments: List["PostComment"] = Relationship(
+        back_populates="post",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    shares: List["PostShare"] = Relationship(
+        back_populates="post",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+
+class PostLike(SQLModel, table=True):
+    __tablename__ = "post_likes"
+
+    __table_args__ = (
+        UniqueConstraint("post_id", "user_id", name="unique_post_like"),
+    )
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    post_id: int = Field(foreign_key="posts.id")
+    user_id: int = Field(foreign_key="users.id")
+
+    liked_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )
+
+    post: Optional["Post"] = Relationship(back_populates="likes")
+
+
+class PostComment(SQLModel, table=True):
+    __tablename__ = "post_comments"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    post_id: int = Field(foreign_key="posts.id")
+    author_id: int = Field(foreign_key="users.id")
+    content: str
+
+    created_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )
+
+    post: Optional["Post"] = Relationship(back_populates="comments")
+
+
+class PostShare(SQLModel, table=True):
+    __tablename__ = "post_shares"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    post_id: int = Field(foreign_key="posts.id")
+    shared_by: int = Field(foreign_key="users.id")
+
+    conversation_id: Optional[int] = Field(default=None, foreign_key="conversations.id")
+    group_id: Optional[int] = Field(default=None, foreign_key="group_chats.id")
+
+    share_link: str  
+
+    shared_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )
+
+    post: Optional["Post"] = Relationship(back_populates="shares")
 
 class Story(SQLModel, table=True):
     __tablename__ = "stories"

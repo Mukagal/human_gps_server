@@ -20,3 +20,14 @@ async def get_current_user(
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     return user
+
+async def get_optional_user(
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+    session: AsyncSession = Depends(get_session)
+):
+    if not credentials:
+        return None
+    token_data = decode_token(credentials.credentials)
+    if not token_data or token_data.get("refresh"):
+        return None
+    return await UserService().get_user_by_email(token_data["user"]["email"], session)

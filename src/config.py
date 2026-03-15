@@ -5,6 +5,9 @@ class Settings(BaseSettings):
     JWT_SECRET:str
     JWT_ALGORITHM:str
     REFRESH_TOKEN_EXPIRY:int = 7 
+    CLOUDINARY_CLOUD_NAME: str
+    CLOUDINARY_API_KEY: str
+    CLOUDINARY_API_SECRET: str
 
 
     model_config = SettingsConfigDict(

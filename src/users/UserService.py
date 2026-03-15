@@ -8,6 +8,17 @@ from datetime import datetime
 from sqlalchemy.exc import IntegrityError  
 from fastapi import HTTPException
 
+import cloudinary
+import cloudinary.uploader
+from ..config import Config
+from fastapi import UploadFile
+
+cloudinary.config(
+    cloud_name=Config.CLOUDINARY_CLOUD_NAME,
+    api_key=Config.CLOUDINARY_API_KEY,
+    api_secret=Config.CLOUDINARY_API_SECRET
+)
+
 
 
 class UserService:
@@ -81,3 +92,23 @@ class UserService:
         await session.commit()
 
         return True
+    
+    async def upload_profile_image(self, user_id: int, file: UploadFile, session: AsyncSession):
+        user = await self.get_user(user_id, session)
+        if not user:
+            return None
+
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder="profile_images",
+            public_id=f"user_{user_id}",
+            overwrite=True,
+            transformation=[
+                {"width": 300, "height": 300, "crop": "fill", "gravity": "face"}
+            ]
+        )
+
+        user.profile_image_path = result["secure_url"]
+        await session.commit()
+        await session.refresh(user)
+        return user
