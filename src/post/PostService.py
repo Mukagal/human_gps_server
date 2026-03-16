@@ -4,7 +4,16 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from ..db.models import Post, PostLike, PostComment, PostShare
 from .PostSchemas import PostCreate, PostUpdate, CommentCreate, ShareRequest, SortBy
 from ..errors import PostNotFoundError, PostOwnershipError
+import cloudinary
+import cloudinary.uploader
+from fastapi import UploadFile
+from ..config import Config
 
+cloudinary.config(
+    cloud_name=Config.CLOUDINARY_CLOUD_NAME,
+    api_key=Config.CLOUDINARY_API_KEY,
+    api_secret=Config.CLOUDINARY_API_SECRET
+)
 
 class PostService:
     async def _get_post_or_404(self, post_id: int, session: AsyncSession) -> Post:
@@ -87,6 +96,26 @@ class PostService:
             raise PostOwnershipError()
         for k, v in data.model_dump(exclude_unset=True).items():
             setattr(post, k, v)
+        await session.commit()
+        await session.refresh(post)
+        return self._to_response(post)
+    
+    async def upload_post_image(self, post_id: int, user_id: int, file: UploadFile, session: AsyncSession):
+        post = await self._get_post_or_404(post_id, session)
+        if post.author_id != user_id:
+            raise PostOwnershipError()
+
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder="post_images",
+            public_id=f"post_{post_id}",
+            overwrite=True,
+            transformation=[
+                {"width": 1080, "height": 1080, "crop": "limit"}
+            ]
+        )
+
+        post.image_path = result["secure_url"]
         await session.commit()
         await session.refresh(post)
         return self._to_response(post)

@@ -5,6 +5,14 @@ import uuid
 import bcrypt
 import jwt
 from ..config import Config
+import logging
+from datetime import datetime, timedelta
+import uuid
+import bcrypt
+import jwt
+import redis.asyncio as aioredis
+from ..config import Config
+
 
 
 def generate_password_hash(password: str) -> str:
@@ -47,4 +55,17 @@ def decode_token(token: str) -> dict:
         logging.exception(e)
         return None
     
+token_blocklist = aioredis.from_url(
+    Config.REDIS_URL,
+    encoding="utf-8",
+    decode_responses=True
+)
 
+
+async def add_jti_to_blocklist(jti: str) -> None:
+    """Block a token by its jti. TTL = access token lifetime (1 hour)."""
+    await token_blocklist.set(name=jti, value="blocked", ex=3600)
+
+
+async def is_jti_blocked(jti: str) -> bool:
+    return await token_blocklist.exists(jti) > 0

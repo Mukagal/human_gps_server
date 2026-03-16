@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import delete, select
 
@@ -23,8 +25,11 @@ cloudinary.config(
 
 class UserService:
 
-    async def get_all_users(self, session: AsyncSession):
-        result = await session.exec(select(User))
+    async def get_all_users(self, session: AsyncSession, username: Optional[str] = None):
+        statement = select(User)
+        if username:
+            statement = statement.where(User.username.ilike(f"%{username}%"))
+        result = await session.exec(statement)
         return result.all()
 
     async def get_user(self, user_id: int, session: AsyncSession):

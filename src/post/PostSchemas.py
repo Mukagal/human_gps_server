@@ -12,7 +12,6 @@ class SortBy(str, Enum):
 
 class PostCreate(BaseModel):
     content: str
-    image_path: Optional[str] = None
 
 
 class PostUpdate(BaseModel):
