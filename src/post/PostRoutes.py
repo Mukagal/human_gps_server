@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, File, UploadFile, Form
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import List, Optional
 
 from ..db.main import get_session
 from ..users.dependencies import get_current_user
-from ..users.dependencies import get_optional_user   # explained below
+from ..users.dependencies import get_optional_user  
 from ..db.models import User
 from .PostService import PostService
 from .PostSchemas import (
@@ -13,7 +13,6 @@ from .PostSchemas import (
     ShareRequest, ShareResponse,
     SortBy
 )
-from fastapi import File, UploadFile
 
 
 post_router = APIRouter()
@@ -67,27 +66,18 @@ async def get_comments(
     return await post_service.get_comments(post_id, session)
 
 
-
 @post_router.post("/posts", response_model=PostResponse, status_code=201)
 async def create_post(
-    post_data: PostCreate,
+    content: str = Form(...),
+    file: UploadFile = File(None),  
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
-    return await post_service.create_post(current_user.id, post_data, session)
-
-@post_router.post("/posts/{post_id}/image", response_model=PostResponse)
-async def upload_post_image(
-    post_id: int,
-    file: UploadFile = File(...),
-    session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user)
-):
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="File must be an image")
+    if file:
+        return await post_service.create_post_with_image(current_user.id, content, file, session)
+    else:
+        return await post_service.create_post(current_user.id, PostCreate(content=content), session)
     
-    return await post_service.upload_post_image(post_id, current_user.id, file, session)
-
 @post_router.patch("/posts/{post_id}", response_model=PostResponse)
 async def update_post(
     post_id: int,

@@ -100,32 +100,22 @@ class PostService:
         await session.refresh(post)
         return self._to_response(post)
     
-    async def upload_post_image(self, post_id: int, user_id: int, file: UploadFile, session: AsyncSession):
-        post = await self._get_post_or_404(post_id, session)
-        if post.author_id != user_id:
-            raise PostOwnershipError()
+    async def create_post_with_image(self, author_id: int, content: str,file: UploadFile | None, session: AsyncSession):
+        image_url = None
 
-        result = cloudinary.uploader.upload(
-            file.file,
-            folder="post_images",
-            public_id=f"post_{post_id}",
-            overwrite=True,
-            transformation=[
-                {"width": 1080, "height": 1080, "crop": "limit"}
-            ]
-        )
+        if file and file.content_type.startswith("image/"):
+            result = cloudinary.uploader.upload(
+                file.file,
+                folder="post_images",
+                transformation=[{"width": 1080, "height": 1080, "crop": "limit"}]
+            )
+            image_url = result["secure_url"]
 
-        post.image_path = result["secure_url"]
+        post = Post(author_id=author_id, content=content, image_path=image_url)
+        session.add(post)
         await session.commit()
         await session.refresh(post)
         return self._to_response(post)
-
-    async def delete_post(self, post_id: int, user_id: int, session: AsyncSession):
-        post = await self._get_post_or_404(post_id, session)
-        if post.author_id != user_id:
-            raise PostOwnershipError()
-        await session.delete(post)
-        await session.commit()
 
 
     async def like_post(self, post_id: int, user_id: int, session: AsyncSession):
