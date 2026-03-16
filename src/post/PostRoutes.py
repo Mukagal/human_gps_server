@@ -66,18 +66,18 @@ async def get_comments(
     return await post_service.get_comments(post_id, session)
 
 
+
 @post_router.post("/posts", response_model=PostResponse, status_code=201)
 async def create_post(
     content: str = Form(...),
-    file: UploadFile = File(None),  
+    file: Optional[UploadFile] = File(default=None),
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
-    if file:
+    if file and file.filename:  
         return await post_service.create_post_with_image(current_user.id, content, file, session)
-    else:
-        return await post_service.create_post(current_user.id, PostCreate(content=content), session)
-    
+    return await post_service.create_post(current_user.id, PostCreate(content=content), session)
+
 @post_router.patch("/posts/{post_id}", response_model=PostResponse)
 async def update_post(
     post_id: int,

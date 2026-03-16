@@ -100,17 +100,16 @@ class PostService:
         await session.refresh(post)
         return self._to_response(post)
     
-    async def create_post_with_image(self, author_id: int, content: str,file: UploadFile | None, session: AsyncSession):
+    async def create_post_with_image(self, author_id: int, content: str, file: UploadFile | None, session: AsyncSession):
         image_url = None
-
-        if file and file.content_type.startswith("image/"):
+        if file and file.content_type and file.content_type.startswith("image/"):
+            file_bytes = await file.read()  
             result = cloudinary.uploader.upload(
-                file.file,
+                file_bytes,          
                 folder="post_images",
                 transformation=[{"width": 1080, "height": 1080, "crop": "limit"}]
             )
             image_url = result["secure_url"]
-
         post = Post(author_id=author_id, content=content, image_path=image_url)
         session.add(post)
         await session.commit()
