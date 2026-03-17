@@ -22,7 +22,6 @@ async def get_current_user(
             detail="Invalid or expired token"
         )
 
-    # check Redis blocklist — covers logout
     jti = token_data.get("jti")
     if jti and await is_jti_blocked(jti):
         raise HTTPException(

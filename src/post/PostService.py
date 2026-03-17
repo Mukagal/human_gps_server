@@ -1,6 +1,8 @@
 from sqlmodel import select, desc, func
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from src.messages import MessageService
+from ..messages.MessageSchemas import MessageSend
 from ..db.models import Conversation, GroupMember, Post, PostLike, PostComment, PostShare, User, Message
 from .PostSchemas import PostCreate, PostUpdate, CommentCreate, ShareRequest, SortBy
 from ..errors import PostNotFoundError, PostOwnershipError
@@ -287,14 +289,12 @@ class PostService:
         session.add(share)
         await session.commit()
         await session.refresh(share)
-        if data.conversation_id:
-            msg = Message(
-                conversation_id=data.conversation_id,
-                sender_id=user_id,
-                content=f"[shared_post:{post_id}] {share_link}"
-            )
-            session.add(msg)
-            await session.commit()
+        await MessageService().send_message(
+            conversation_id=data.conversation_id,
+            message_data=MessageSend(content=f"[shared_post:{post_id}] {share_link}"),
+            sender_id=user_id,
+            session=session
+        )
 
         return share
 
