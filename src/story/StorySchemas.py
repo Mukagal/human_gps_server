@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Optional
 
 class StoryCreate(BaseModel):
-    author_id: int
     image_path: str
     caption: Optional[str] = None
 

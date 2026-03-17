@@ -10,6 +10,9 @@
 6. **GroupChat**
 7. **GroupMember**
 8. **GroupMessage**
+9. **Post Like**
+10. **Post Shares**
+11. **Post Comments**
 
 ---
 
@@ -27,6 +30,17 @@
 - User can View Post
 - User can View Feed
 - User can Delete Post
+
+### Post Like
+- Authenticated User Can Like Post
+- Authenticated User Can Unlike Post 
+
+### Post Comment
+- Authenticated User Can Comment Post
+- Authenticated User Can Delete Comment Post 
+
+### Post Share
+- Authenticated User Can Share Post
 
 ### Story
 - User can Create Story

@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
 from datetime import datetime, timedelta
 import sqlalchemy.dialects.postgresql as pg
-from sqlalchemy import Column, UniqueConstraint
+from sqlalchemy import Column, ForeignKey, Integer, UniqueConstraint
 
 
 class User(SQLModel, table=True):
@@ -95,15 +95,26 @@ class Post(SQLModel, table=True):
 
     likes: List["PostLike"] = Relationship(
         back_populates="post",
-        sa_relationship_kwargs={"lazy": "selectin"}
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "cascade": "all, delete-orphan"
+        }
     )
+
     comments: List["PostComment"] = Relationship(
         back_populates="post",
-        sa_relationship_kwargs={"lazy": "selectin"}
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "cascade": "all, delete-orphan"
+        }
     )
+
     shares: List["PostShare"] = Relationship(
         back_populates="post",
-        sa_relationship_kwargs={"lazy": "selectin"}
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "cascade": "all, delete-orphan"
+        }
     )
 
 class PostLike(SQLModel, table=True):
@@ -114,7 +125,13 @@ class PostLike(SQLModel, table=True):
     )
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    post_id: int = Field(foreign_key="posts.id")
+    post_id: int = Field(
+        sa_column=Column(
+            Integer,
+            ForeignKey("posts.id", ondelete="CASCADE"),
+            nullable=False
+        )
+    )
     user_id: int = Field(foreign_key="users.id")
 
     liked_at: datetime = Field(
@@ -128,7 +145,13 @@ class PostComment(SQLModel, table=True):
     __tablename__ = "post_comments"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    post_id: int = Field(foreign_key="posts.id")
+    post_id: int = Field(
+        sa_column=Column(
+            Integer,
+            ForeignKey("posts.id", ondelete="CASCADE"),
+            nullable=False
+        )
+    )
     author_id: int = Field(foreign_key="users.id")
     content: str
 
@@ -143,7 +166,13 @@ class PostShare(SQLModel, table=True):
     __tablename__ = "post_shares"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    post_id: int = Field(foreign_key="posts.id")
+    post_id: int = Field(
+        sa_column=Column(
+            Integer,
+            ForeignKey("posts.id", ondelete="CASCADE"),
+            nullable=False
+        )
+    )
     shared_by: int = Field(foreign_key="users.id")
 
     conversation_id: Optional[int] = Field(default=None, foreign_key="conversations.id")

@@ -38,6 +38,7 @@ async def get_messages(
     )
     return messages[:limit]
 
+@message_router.patch("/messages/{message_id}")
 async def update_message(
     message_id: int,
     update_data: MessageUpdate,

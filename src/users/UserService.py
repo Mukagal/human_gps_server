@@ -72,6 +72,9 @@ class UserService:
             return None
 
         for k, v in update_data.model_dump(exclude_unset=True).items():
+            if k == "password":  
+                from src.users.utils import generate_password_hash
+                v = generate_password_hash(v)
             setattr(user, k, v)
 
         await session.commit()

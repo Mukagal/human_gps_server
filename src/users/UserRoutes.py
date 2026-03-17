@@ -159,7 +159,6 @@ async def get_me(
 async def get_user(
     user_id: int,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user)
 ):
     user = await user_service.get_user(user_id, session)
     if not user:

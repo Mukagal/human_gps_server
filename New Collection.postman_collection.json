@@ -11,64 +11,6 @@
       "name": "Users",
       "item": [
         {
-          "name": "Create User",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"username\": \"Naruto\",\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/users",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "v1",
-                "users"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get User",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/users/1",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "v1",
-                "users",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Get All User",
           "request": {
             "method": "GET",
@@ -105,24 +47,12 @@
           "response": []
         },
         {
-          "name": "Update User",
+          "name": "Get User Profile",
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "PATCH",
+            "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"password\":\"SASUKEEEE\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/users/6",
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/profile",
               "protocol": "http",
               "host": [
                 "127",
@@ -135,7 +65,218 @@
                 "api",
                 "v1",
                 "users",
-                "6"
+                "1",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile Image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/profile-image",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "profile-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User Account",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"Naruto\",\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/signup",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Users",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"230103162@sdu.edu.kz\",\r\n  \"password\": \"qwerty\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmFydXRvQGdtYWlsLmNvbSIsInVzZXJfaWQiOiI1In0sImV4cCI6MTc3MzcwMTExOCwianRpIjoiNTgxNWVmNDctMzhmNS00NzBiLThiYjctOWEzNGY0ODU5M2Y0IiwicmVmcmVzaCI6ZmFsc2V9.tifcUDE14rbW7MddFiTciGFRAActXPMQ1-96YsqERY4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/logout",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Access Token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmFydXRvQGdtYWlsLmNvbSIsInVzZXJfaWQiOiI1In0sImV4cCI6MTc3NDMwMjQ5NSwianRpIjoiMjBiNTNiYWQtZTM5YS00MmE3LTgxOTctNjE2Yjg5YTNmODliIiwicmVmcmVzaCI6dHJ1ZX0.SIokmrMPZlEFW1LvPNiYPcFDVd4WaEnTefMKSnEJbUA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/refresh",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/me",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
               ]
             }
           },
@@ -144,6 +285,16 @@
         {
           "name": "Delete User",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmFydXRvQGdtYWlsLmNvbSIsInVzZXJfaWQiOiI1In0sImV4cCI6MTc3MzcwMTI5NSwianRpIjoiMDY4ZWU3YTktYWVjMi00MWI5LTg4MmEtNWZhOGU1NWU2MzgwIiwicmVmcmVzaCI6ZmFsc2V9.dk_TmMVGeozvdJw-a92w0TQGrdK3zRO7ktWcYh0n4IU",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "body": {
@@ -151,7 +302,7 @@
               "raw": "{\r\n  \"name\": \"Group 3\",\r\n  \"created_by\": 6,\r\n  \"member_ids\": [\r\n    6,5,4\r\n  ]\r\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/users/?user_id=5",
+              "raw": "http://127.0.0.1:8000/api/v1/users/me",
               "protocol": "http",
               "host": [
                 "127",
@@ -164,21 +315,310 @@
                 "api",
                 "v1",
                 "users",
-                ""
-              ],
-              "query": [
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
                 {
-                  "key": "user_id",
-                  "value": "5",
-                  "type": "text"
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
                 }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\":\"string\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/me",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoibmFydXRvQGdtYWlsLmNvbSIsInVzZXJfaWQiOiI1In0sImV4cCI6MTc3MzcwMTI5NSwianRpIjoiMDY4ZWU3YTktYWVjMi00MWI5LTg4MmEtNWZhOGU1NWU2MzgwIiwicmVmcmVzaCI6ZmFsc2V9.dk_TmMVGeozvdJw-a92w0TQGrdK3zRO7ktWcYh0n4IU",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"naruto@gmail.com\",\r\n  \"password\": \"Dattebayo\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMjkzNCwianRpIjoiMTE4OGZiYmMtY2M2ZS00MGY2LTllZTgtNGRiYWIwOWQ2ZjI2IiwicmVmcmVzaCI6ZmFsc2V9.cmbMGSWAAqA420ubBKVwmgM0A9tod-XyXQsecWAfDlI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "cb3897aa-d89e-4077-af46-4de9bfe42476",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-28 180258.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/me/profile-image",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me",
+                "profile-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Liked Posts",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/liked-posts",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "liked-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Commented Posts",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/commented-posts",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "commented-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Shared Posts",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/shared-posts",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "shared-posts"
               ]
             }
           },
           "response": []
         }
       ],
-      "description": "User manager"
+      "description": "User manager",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "Conversations",
@@ -187,12 +627,19 @@
           "name": "Get Conversation",
           "request": {
             "auth": {
-              "type": "noauth"
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/conversations/4",
+              "raw": "http://127.0.0.1:8000/api/v1/conversations/3",
               "protocol": "http",
               "host": [
                 "127",
@@ -205,7 +652,7 @@
                 "api",
                 "v1",
                 "conversations",
-                "4"
+                "3"
               ]
             }
           },
@@ -215,12 +662,19 @@
           "name": "Create Conversations",
           "request": {
             "auth": {
-              "type": "noauth"
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/conversations?user_a=2&user_b=6",
+              "raw": "http://127.0.0.1:8000/api/v1/conversations?user_b=1",
               "protocol": "http",
               "host": [
                 "127",
@@ -236,14 +690,8 @@
               ],
               "query": [
                 {
-                  "key": "user_a",
-                  "value": "2",
-                  "type": "text"
-                },
-                {
                   "key": "user_b",
-                  "value": "6",
-                  "type": "text"
+                  "value": "1"
                 }
               ]
             }
@@ -253,6 +701,16 @@
         {
           "name": "Get User's Conversations",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -279,6 +737,16 @@
         {
           "name": "Get Conversation with Messages",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -305,6 +773,16 @@
         {
           "name": "Get Inbox",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -337,11 +815,21 @@
         {
           "name": "Send Message",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"sender_id\": 6,\r\n  \"content\": \"I'm Naruto Uzumaki, DATTEBAYO\"\r\n}",
+              "raw": "{\r\n  \"content\": \"Testing from postman\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -375,11 +863,21 @@
             "disableBodyPruning": true
           },
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"sender_id\": 6,\r\n  \"content\": \"I'm Naruto Uzumaki, DATTEBAYO\"\r\n}"
+              "raw": ""
             },
             "url": {
               "raw": "http://127.0.0.1:8000/api/v1/conversations/3/messages?limit=20",
@@ -401,8 +899,7 @@
               "query": [
                 {
                   "key": "limit",
-                  "value": "20",
-                  "type": "text"
+                  "value": "20"
                 }
               ]
             }
@@ -412,11 +909,21 @@
         {
           "name": "Update Message",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"content\": \"I'm Naruto Uzumaki, And I will become Hokage\"\r\n}",
+              "raw": "{\r\n  \"content\": \"Updated messae\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -424,7 +931,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/messages/3?sender_id=6",
+              "raw": "http://127.0.0.1:8000/api/v1/messages/3",
               "protocol": "http",
               "host": [
                 "127",
@@ -438,12 +945,6 @@
                 "v1",
                 "messages",
                 "3"
-              ],
-              "query": [
-                {
-                  "key": "sender_id",
-                  "value": "6"
-                }
               ]
             }
           },
@@ -452,6 +953,16 @@
         {
           "name": "Delete Message",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "body": {
@@ -459,7 +970,7 @@
               "raw": "{\r\n  \"content\": \"I'm Naruto Uzumaki, And I will become Hokage\"\r\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/messages/3?sender_id=6",
+              "raw": "http://127.0.0.1:8000/api/v1/messages/4",
               "protocol": "http",
               "host": [
                 "127",
@@ -472,13 +983,7 @@
                 "api",
                 "v1",
                 "messages",
-                "3"
-              ],
-              "query": [
-                {
-                  "key": "sender_id",
-                  "value": "6"
-                }
+                "4"
               ]
             }
           },
@@ -490,18 +995,87 @@
       "name": "Posts",
       "item": [
         {
-          "name": "Create Post",
+          "name": "Get Feed",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
           "request": {
-            "method": "POST",
+            "method": "GET",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts?skip=0&limit=20&sort_by=likes&keyword=sdu",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "likes",
+                  "type": "text"
+                },
+                {
+                  "key": "keyword",
+                  "value": "sdu",
+                  "type": "text"
                 }
-              }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "Post With image from random acc",
+                  "type": "text",
+                  "uuid": "d10df9e9-d270-4948-a821-a550977e4172"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "398694f0-3726-4e0c-97f7-be263df06200",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-29 191626.png"
+                }
+              ]
             },
             "url": {
               "raw": "http://127.0.0.1:8000/api/v1/posts",
@@ -523,59 +1097,42 @@
           "response": []
         },
         {
-          "name": "Get Feed",
+          "name": "Get Post",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
-            },
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/posts?skip=0&limit=20",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "v1",
-                "posts"
-              ],
-              "query": [
+              "mode": "formdata",
+              "formdata": [
                 {
-                  "key": "skip",
-                  "value": "0",
-                  "type": "text"
+                  "key": "content",
+                  "value": "Post With image from random acc",
+                  "type": "text",
+                  "uuid": "d10df9e9-d270-4948-a821-a550977e4172"
                 },
                 {
-                  "key": "limit",
-                  "value": "20",
-                  "type": "text"
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "398694f0-3726-4e0c-97f7-be263df06200",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-29 191626.png"
                 }
               ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Post",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/posts/5",
+              "raw": "http://127.0.0.1:8000/api/v1/posts/4",
               "protocol": "http",
               "host": [
                 "127",
@@ -588,7 +1145,639 @@
                 "api",
                 "v1",
                 "posts",
-                "5"
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"Updated post with image from random user\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Posts I Liked",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/me/liked-posts",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "me",
+                "liked-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Posts",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "Post With image from random acc",
+                  "type": "text",
+                  "uuid": "d10df9e9-d270-4948-a821-a550977e4172"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "398694f0-3726-4e0c-97f7-be263df06200",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-29 191626.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/1/posts",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1",
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Shared Post",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "Post With image from random acc",
+                  "type": "text",
+                  "uuid": "d10df9e9-d270-4948-a821-a550977e4172"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "398694f0-3726-4e0c-97f7-be263df06200",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-29 191626.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/view",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "view"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Comments",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "Post With image from random acc",
+                  "type": "text",
+                  "uuid": "d10df9e9-d270-4948-a821-a550977e4172"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "398694f0-3726-4e0c-97f7-be263df06200",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-29 191626.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/comments",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"Comment under post without image\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/comments",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Like Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"Comment under post without image\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/like",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unlike Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"Comment under post without image\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/like",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"Comment under post without image\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/comments/3",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "comments",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Share Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"conversation_id\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/share",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "share"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Post Likers",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/likes",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "likes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Post Shares",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/posts/2/shares",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "posts",
+                "2",
+                "shares"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Posts Interactions",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/me/posts/interactions",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "me",
+                "posts",
+                "interactions"
               ]
             }
           },
@@ -610,7 +1799,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"author_id\": 6,\r\n  \"content\": \"I will become Hokage one day!!!😎\"\r\n}"
+              "raw": ""
             },
             "url": {
               "raw": "http://127.0.0.1:8000/api/v1/stories",
@@ -634,16 +1823,34 @@
         {
           "name": "Create Story",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiMjMwMTAzMTYyQHNkdS5lZHUua3oiLCJ1c2VyX2lkIjoiMSJ9LCJleHAiOjE3NzM3MDc2NDgsImp0aSI6IjdiMDE5ZTI0LWQ5NTAtNDI4OC04YzRiLTc0MjJlMmYzNjA5ZCIsInJlZnJlc2giOmZhbHNlfQ.diWZSbayMy8XWHv5CSQlMFZbs9AMjkj0QSHaPHWsq_o",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"author_id\": 6,\r\n  \"image_path\": \"string\",\r\n  \"caption\": \"Second  day as Hokage\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "caption",
+                  "value": "This is Good phrase from anime",
+                  "type": "text",
+                  "uuid": "1384c1a2-d211-43ff-a321-7bce274163e7"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "8d126758-bdbc-4c9a-a8ef-542582493ded",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-12-02 174914.png"
                 }
-              }
+              ]
             },
             "url": {
               "raw": "http://127.0.0.1:8000/api/v1/stories",

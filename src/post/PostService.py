@@ -1,12 +1,12 @@
 from sqlmodel import select, desc, func
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from ..db.models import Post, PostLike, PostComment, PostShare
+from ..db.models import Conversation, GroupMember, Post, PostLike, PostComment, PostShare, User, Message
 from .PostSchemas import PostCreate, PostUpdate, CommentCreate, ShareRequest, SortBy
 from ..errors import PostNotFoundError, PostOwnershipError
 import cloudinary
 import cloudinary.uploader
-from fastapi import UploadFile
+from fastapi import HTTPException, UploadFile
 from ..config import Config
 
 cloudinary.config(
@@ -16,7 +16,7 @@ cloudinary.config(
 )
 
 class PostService:
-    async def _get_post_or_404(self, post_id: int, session: AsyncSession) -> Post:
+    async def _get_post(self, post_id: int, session: AsyncSession) -> Post:
         result = await session.exec(select(Post).where(Post.id == post_id))
         post = result.first()
         if not post:
@@ -62,7 +62,7 @@ class PostService:
         return [self._to_response(p) for p in posts[skip: skip + limit]]
 
     async def get_post(self, post_id: int, session: AsyncSession) -> dict:
-        post = await self._get_post_or_404(post_id, session)
+        post = await self._get_post(post_id, session)
         return self._to_response(post)
 
     async def get_user_posts(
@@ -91,7 +91,7 @@ class PostService:
         return self._to_response(post)
 
     async def update_post(self, post_id: int, user_id: int, data: PostUpdate, session: AsyncSession):
-        post = await self._get_post_or_404(post_id, session)
+        post = await self._get_post(post_id, session)
         if post.author_id != user_id:
             raise PostOwnershipError()
         for k, v in data.model_dump(exclude_unset=True).items():
@@ -100,6 +100,15 @@ class PostService:
         await session.refresh(post)
         return self._to_response(post)
     
+    async def delete_post(self,post_id: int, user_id: int, session: AsyncSession ) -> None:
+        post = await self._get_post(post_id, session)
+
+        if post.author_id != user_id:
+            raise PostOwnershipError() 
+
+        await session.delete(post)
+        await session.commit()
+
     async def create_post_with_image(self, author_id: int, content: str, file: UploadFile | None, session: AsyncSession):
         image_url = None
         if file and file.content_type and file.content_type.startswith("image/"):
@@ -118,7 +127,7 @@ class PostService:
 
 
     async def like_post(self, post_id: int, user_id: int, session: AsyncSession):
-        await self._get_post_or_404(post_id, session)
+        await self._get_post(post_id, session)
 
         existing = await session.exec(
             select(PostLike).where(
@@ -142,7 +151,7 @@ class PostService:
         return {"post_id": post_id, "likes": result.one()}
 
     async def unlike_post(self, post_id: int, user_id: int, session: AsyncSession):
-        await self._get_post_or_404(post_id, session)
+        await self._get_post(post_id, session)
 
         existing = await session.exec(
             select(PostLike).where(
@@ -164,21 +173,42 @@ class PostService:
 
 
     async def add_comment(self, post_id: int, author_id: int, data: CommentCreate, session: AsyncSession):
-        await self._get_post_or_404(post_id, session)
+        await self._get_post(post_id, session)
         comment = PostComment(post_id=post_id, author_id=author_id, content=data.content)
         session.add(comment)
         await session.commit()
         await session.refresh(comment)
-        return comment
+        user_result = await session.exec(select(User.username).where(User.id == author_id))
+        username = user_result.first()
+        return {
+            "id": comment.id,
+            "post_id": comment.post_id,
+            "author_id": comment.author_id,
+            "content": comment.content,
+            "created_at": comment.created_at,
+            "author_username": username
+        }
 
     async def get_comments(self, post_id: int, session: AsyncSession):
-        await self._get_post_or_404(post_id, session)
+        await self._get_post(post_id, session)
         result = await session.exec(
-            select(PostComment)
+            select(PostComment, User.username)
+            .join(User, User.id == PostComment.author_id)
             .where(PostComment.post_id == post_id)
             .order_by(desc(PostComment.created_at))
         )
-        return result.all()
+        rows = result.all()
+        comments = []
+        for comment, username in rows:
+            comments.append({
+                "id": comment.id,
+                "post_id": comment.post_id,
+                "author_id": comment.author_id,
+                "content": comment.content,
+                "created_at": comment.created_at,
+                "author_username": username
+            })
+        return comments
 
     async def delete_comment(self, comment_id: int, user_id: int, session: AsyncSession):
         result = await session.exec(
@@ -195,16 +225,54 @@ class PostService:
         await session.commit()
 
 
-    async def share_post(
-        self, post_id: int, user_id: int,
-        data: ShareRequest, session: AsyncSession,
-        base_url: str = ""
-    ):
-        await self._get_post_or_404(post_id, session)
+    async def share_post(self, post_id: int, user_id: int, data: ShareRequest, session: AsyncSession, base_url: str = ""):
+        await self._get_post(post_id, session)
 
         if not data.conversation_id and not data.group_id:
-            from fastapi import HTTPException
-            raise HTTPException(status_code=400, detail="Provide conversation_id or group_id")
+            raise HTTPException(
+                status_code=400,
+                detail="Provide conversation_id or group_id"
+            )
+
+        if data.conversation_id and data.group_id:
+            raise HTTPException(
+                status_code=400,
+                detail="Share either to conversation OR group"
+            )
+
+        if data.conversation_id:
+
+            statement = select(Conversation).where(
+                Conversation.id == data.conversation_id
+            )
+
+            result = await session.exec(statement)
+            conversation = result.first()
+
+            if not conversation:
+                raise HTTPException(status_code=404, detail="Conversation not found")
+
+            if user_id not in [conversation.user1_id, conversation.user2_id]:
+                raise HTTPException(
+                    status_code=403,
+                    detail="You are not part of this conversation"
+                )
+
+        if data.group_id:
+
+            statement = select(GroupMember).where(
+                GroupMember.group_id == data.group_id,
+                GroupMember.user_id == user_id
+            )
+
+            result = await session.exec(statement)
+            member = result.first()
+
+            if not member:
+                raise HTTPException(
+                    status_code=403,
+                    detail="You are not a member of this group"
+                )
 
         share_link = f"{base_url}/api/v1/posts/{post_id}/view"
 
@@ -213,15 +281,25 @@ class PostService:
             shared_by=user_id,
             conversation_id=data.conversation_id,
             group_id=data.group_id,
-            share_link=share_link,
+            share_link=share_link
         )
+
         session.add(share)
         await session.commit()
         await session.refresh(share)
+        if data.conversation_id:
+            msg = Message(
+                conversation_id=data.conversation_id,
+                sender_id=user_id,
+                content=f"[shared_post:{post_id}] {share_link}"
+            )
+            session.add(msg)
+            await session.commit()
+
         return share
 
     async def get_post_likers(self, post_id: int, owner_id: int, session: AsyncSession):
-        post = await self._get_post_or_404(post_id, session)
+        post = await self._get_post(post_id, session)
         if post.author_id != owner_id:
             raise PostOwnershipError()
 
@@ -232,7 +310,7 @@ class PostService:
         return result.all()
 
     async def get_post_commenters(self, post_id: int, session: AsyncSession):
-        await self._get_post_or_404(post_id, session)
+        await self._get_post(post_id, session)
         result = await session.exec(
             select(PostComment).where(PostComment.post_id == post_id)
             .order_by(desc(PostComment.created_at))
@@ -240,7 +318,7 @@ class PostService:
         return result.all()
 
     async def get_post_sharers(self, post_id: int, owner_id: int, session: AsyncSession):
-        post = await self._get_post_or_404(post_id, session)
+        post = await self._get_post(post_id, session)
         if post.author_id != owner_id:
             raise PostOwnershipError()
 
@@ -266,7 +344,6 @@ class PostService:
             }
             for p in posts
         ]
-
 
     async def get_posts_i_liked(self, user_id: int, session: AsyncSession):
         result = await session.exec(
