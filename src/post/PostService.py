@@ -1,7 +1,7 @@
 from sqlmodel import select, desc, func
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from ..messages import MessageService
+from ..messages.MessageService import MessageService
 from ..messages.MessageSchemas import MessageSend
 from ..db.models import Conversation, GroupMember, Post, PostLike, PostComment, PostShare, User, Message
 from .PostSchemas import PostCreate, PostUpdate, CommentCreate, ShareRequest, SortBy
