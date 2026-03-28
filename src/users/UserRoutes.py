@@ -13,7 +13,7 @@ from ..users.utils import (
 )
 from ..db.main import get_session
 from .UserService import UserService
-from .UserSchemas import UserCreate, UserPublic, UserUpdate, UserLogin, UserModel, UserSafe
+from .UserSchemas import UserCreate, UserPublic, UserUpdate, UserLogin, UserModel, UserSafe, UserLocationUpdate
 from ..db.models import User
 
 user_router = APIRouter()
@@ -101,6 +101,24 @@ async def login_users(
         detail="Invalid email or password"
     )
 
+@user_router.get("/users/nearby")
+async def get_nearby_users(
+    latitude: float = Query(..., ge=-90, le=90),
+    longitude: float = Query(..., ge=-180, le=180),
+    radius_km: float = Query(default=10.0, gt=0, le=500),
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    results = await user_service.get_nearby_users(latitude, longitude, radius_km, session)
+    return [
+        {
+            "id": r["user"].id,
+            "username": r["user"].username,
+            "profile_image_path": r["user"].profile_image_path,
+            "distance_km": r["distance_km"],
+        }
+        for r in results
+    ]
 
 @user_router.post("/logout")
 async def logout(
@@ -231,3 +249,31 @@ async def get_user_shared_posts(
 ):
     from ..post.PostService import PostService
     return await PostService().get_posts_i_shared(user_id, session)
+
+
+@user_router.patch("/users/me/location", response_model=UserModel)
+async def update_my_location(
+    location: UserLocationUpdate,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    user = await user_service.update_location(current_user.id, location.latitude, location.longitude, session)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@user_router.get("/users/{user_id}/location")
+async def get_user_location(
+    user_id: int,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    user = await user_service.get_user(user_id, session)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.latitude is None or user.longitude is None:
+        raise HTTPException(status_code=404, detail="User has not set a location")
+    return {"user_id": user_id, "latitude": user.latitude, "longitude": user.longitude}
+
+

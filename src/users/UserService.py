@@ -14,6 +14,7 @@ import cloudinary
 import cloudinary.uploader
 from ..config import Config
 from fastapi import UploadFile
+import math
 
 cloudinary.config(
     cloud_name=Config.CLOUDINARY_CLOUD_NAME,
@@ -120,3 +121,35 @@ class UserService:
         await session.commit()
         await session.refresh(user)
         return user
+    
+    async def update_location(self, user_id: int, latitude: float, logtitude: float, session:AsyncSession):
+        user = await self.get_user(user_id, session)
+        if not user:
+            return None
+        user.latitude = latitude
+        user.longitude = logtitude
+        await session.commit()
+        await session.refresh(user)
+        return user
+    async def get_nearby_users(self, latitude: float, longitude: float, radius_km: float, session: AsyncSession):
+
+        result = await session.exec(
+            select(User).where(User.latitude.isnot(None), User.longitude.isnot(None))
+        )
+        all_users = result.all()
+
+        def haversine(lat1, lon1, lat2, lon2):
+            R = 6371 
+            dlat = math.radians(lat2 - lat1)
+            dlon = math.radians(lon2 - lon1)
+            a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+            return R * 2 * math.asin(math.sqrt(a))
+
+        nearby = []
+        for user in all_users:
+            dist = haversine(latitude, longitude, user.latitude, user.longitude)
+            if dist <= radius_km:
+                nearby.append({"user": user, "distance_km": round(dist, 2)})
+
+        nearby.sort(key=lambda x: x["distance_km"])
+        return nearby

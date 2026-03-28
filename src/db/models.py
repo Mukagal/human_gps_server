@@ -3,6 +3,7 @@ from typing import Optional, List
 from datetime import datetime, timedelta
 import sqlalchemy.dialects.postgresql as pg
 from sqlalchemy import Column, ForeignKey, Integer, UniqueConstraint
+import enum
 
 
 class User(SQLModel, table=True):
@@ -15,6 +16,8 @@ class User(SQLModel, table=True):
     password: str
 
     profile_image_path: Optional[str] = None
+    latitude: Optional[float] = Field(default=None, nullable=True)
+    longitude: Optional[float] = Field(default=None, nullable=True)
 
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
@@ -251,3 +254,71 @@ class GroupMessage(SQLModel, table=True):
     )
 
     group: Optional[GroupChat] = Relationship(back_populates="messages")
+
+
+class HelpCategory(str, enum.Enum):
+    TUTOR = "tutor"
+    PHYSICAL = "physical"
+    RENTAL = "rental"
+    OTHER = "other"
+
+class RequestStatus(str, enum.Enum):
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+
+class ApplicationStatus(str, enum.Enum):
+    PENDING = "pending"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+
+
+class RequestHelp(SQLModel, table=True):
+    __tablename__ = "request_helps"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    requester_id: int = Field(foreign_key="users.id")
+
+    title: str
+    description: str
+    category: HelpCategory
+
+    status: RequestStatus = Field(default=RequestStatus.OPEN)
+
+    created_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )
+    expires_at: Optional[datetime] = None
+
+    applications: List["HelpApplication"] = Relationship(
+        back_populates="request",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
+
+
+class HelpApplication(SQLModel, table=True):
+    __tablename__ = "help_applications"
+
+    __table_args__ = (
+        UniqueConstraint("request_id", "applicant_id", name="unique_help_application"),
+    )
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    request_id: int = Field(
+        sa_column=Column(
+            Integer,
+            ForeignKey("request_helps.id", ondelete="CASCADE"),
+            nullable=False
+        )
+    )
+    applicant_id: int = Field(foreign_key="users.id")
+    message: Optional[str] = None
+
+    status: ApplicationStatus = Field(default=ApplicationStatus.PENDING)
+
+    applied_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )
+
+    request: Optional[RequestHelp] = Relationship(back_populates="applications")

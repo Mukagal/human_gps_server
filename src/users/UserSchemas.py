@@ -29,6 +29,8 @@ class UserModel(BaseModel):
     email: str
     profile_image_path: Optional[str] = None
     created_at: datetime
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -49,6 +51,12 @@ class UserSafe(BaseModel):
     email: str
     profile_image_path: Optional[str] = None
     created_at: datetime
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
     class Config:
         from_attributes = True
+
+class UserLocationUpdate(BaseModel):
+    latitude: float = Field(ge=-90, le=90)
+    longitude: float = Field(ge=-180, le=180)
