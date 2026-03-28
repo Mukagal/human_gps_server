@@ -5,7 +5,7 @@ from typing import Optional
 from ..db.main import get_session
 from ..users.dependencies import get_current_user
 from ..db.models import User, HelpCategory
-from .KomekSchemas import KomekCreate, KomekOut, ApplyToRequestCreate
+from .KomekSchemas import KomekCreate, KomekOut, ApplyToRequestCreate, KomekNearbyOut
 from .KomekService import KomekService
 
 komek_router = APIRouter()
@@ -105,3 +105,15 @@ async def complete_request(
     current_user: User = Depends(get_current_user),
 ):
     return await service.complete_request(request_id, current_user.id, session)
+
+@komek_router.get("/requests/nearby",response_model=list[KomekNearbyOut])
+async def get_nearby_requests(
+    latitude: float = Query(..., ge=-90, le=90),
+    longitude: float = Query(..., ge=-180, le=180),
+    radius_km: float = Query(default=20.0, gt=0, le=500),
+    category: Optional[HelpCategory] = Query(default=None),
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    
+):
+    return await service.get_nearby_requests(latitude, longitude, radius_km, category, session)

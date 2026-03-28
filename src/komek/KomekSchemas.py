@@ -40,6 +40,16 @@ class KomekOut(BaseModel):
     class Config:
         from_attributes = True
 
+class KomekNearbyOut(BaseModel):
+    request: KomekOut
+    distance_km: float
+    requester_latitude: float
+    requester_longitude: float
+    requester_username: str
+
+    class Config:
+        from_attributes = True
+
 
 class ApplyToRequestCreate(BaseModel):
     message: Optional[str] = Field(default=None, max_length=500)

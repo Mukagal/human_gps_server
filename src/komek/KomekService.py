@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select, or_
 from fastapi import HTTPException, status
 from typing import Optional
-
-from ..db.models import RequestHelp, HelpApplication, RequestStatus, ApplicationStatus
+import math
+from ..db.models import RequestHelp, HelpApplication, RequestStatus, ApplicationStatus, User
 from .KomekSchemas import KomekCreate, ApplyToRequestCreate
 
 
@@ -198,3 +198,41 @@ class KomekService:
             select(HelpApplication).where(HelpApplication.applicant_id == user_id)
         )
         return result.all()
+
+    async def get_nearby_requests(self, latitude: float, longitude: float, radius_km: float, category=None, session: AsyncSession = None):
+        stmt = (
+            select(RequestHelp)
+            .where(RequestHelp.status == RequestStatus.OPEN)
+            .options(selectinload(RequestHelp.applications))
+        )
+        if category:
+            stmt = stmt.where(RequestHelp.category == category)
+        result = await session.exec(stmt)
+        requests = result.all()
+
+        def haversine(lat1, lon1, lat2, lon2):
+            R = 6371
+            dlat = math.radians(lat2 - lat1)
+            dlon = math.radians(lon2 - lon1)
+            a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+            return R * 2 * math.asin(math.sqrt(a))
+
+        nearby = []
+        for req in requests:
+            from sqlmodel import select as sel
+            user_result = await session.exec(sel(User).where(User.id == req.requester_id))
+            user = user_result.first()
+            if not user or user.latitude is None or user.longitude is None:
+                continue
+            dist = haversine(latitude, longitude, user.latitude, user.longitude)
+            if dist <= radius_km:
+                nearby.append({
+                    "request": req,
+                    "distance_km": round(dist, 2),
+                    "requester_latitude": user.latitude,
+                    "requester_longitude": user.longitude,
+                    "requester_username": user.username,
+                })
+
+        nearby.sort(key=lambda x: x["distance_km"])
+        return nearby
