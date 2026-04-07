@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, File, UploadFile, Form
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import List, Optional
-
+from ..middlware.rate_limit import limiter, WRITE_LIMIT, GENERAL_LIMIT_MIN
 from ..db.main import get_session
 from ..users.dependencies import get_current_user
 from ..users.dependencies import get_optional_user  
 from ..db.models import User
 from .PostService import PostService
+from ..tasks.moderation_task import moderate_image
+from ..config import Config
+import base64
 from .PostSchemas import (
     PostCreate, PostUpdate, PostResponse,
     CommentCreate, CommentResponse,
@@ -68,18 +71,32 @@ async def get_comments(
 
 
 @post_router.post("/posts", response_model=PostResponse, status_code=201)
+@limiter.limit(WRITE_LIMIT)
 async def create_post(
+    request:Request,
     content: str = Form(...),
     file: Optional[UploadFile] = File(default=None),
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
-    if file and file.filename:  
-        return await post_service.create_post_with_image(current_user.id, content, file, session)
+    if file and file.filename:
+        image_bytes = await file.read()
+        import io
+        file.file = io.BytesIO(image_bytes)
+        post = await post_service.create_post_with_image(current_user.id, content, file, session)
+        
+        post_id = post["id"] if isinstance(post, dict) else post.id
+        
+        b64 = base64.b64encode(image_bytes).decode()
+        moderate_image.delay(post_id, b64, Config.DATABASE_URL)
+        
+        return post
     return await post_service.create_post(current_user.id, PostCreate(content=content), session)
 
 @post_router.patch("/posts/{post_id}", response_model=PostResponse)
+@limiter.limit(WRITE_LIMIT)
 async def update_post(
+    request:Request,
     post_id: int,
     update_data: PostUpdate,
     session: AsyncSession = Depends(get_session),
@@ -89,7 +106,9 @@ async def update_post(
 
 
 @post_router.delete("/posts/{post_id}", status_code=204)
+@limiter.limit(WRITE_LIMIT)
 async def delete_post(
+    request:Request,
     post_id: int,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -99,7 +118,9 @@ async def delete_post(
 
 
 @post_router.post("/posts/{post_id}/like")
+@limiter.limit(WRITE_LIMIT)
 async def like_post(
+    request:Request,
     post_id: int,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -108,7 +129,9 @@ async def like_post(
 
 
 @post_router.delete("/posts/{post_id}/like")
+@limiter.limit(WRITE_LIMIT)
 async def unlike_post(
+    request:Request,
     post_id: int,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -118,7 +141,9 @@ async def unlike_post(
 
 
 @post_router.post("/posts/{post_id}/comments", response_model=CommentResponse, status_code=201)
+@limiter.limit(WRITE_LIMIT)
 async def add_comment(
+    request:Request,
     post_id: int,
     comment_data: CommentCreate,
     session: AsyncSession = Depends(get_session),
@@ -128,7 +153,9 @@ async def add_comment(
 
 
 @post_router.delete("/posts/comments/{comment_id}", status_code=204)
+@limiter.limit(WRITE_LIMIT)
 async def delete_comment(
+    request:Request,
     comment_id: int,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
@@ -136,6 +163,7 @@ async def delete_comment(
     await post_service.delete_comment(comment_id, current_user.id, session)
 
 @post_router.post("/posts/{post_id}/share", response_model=ShareResponse, status_code=201)
+@limiter.limit(WRITE_LIMIT)
 async def share_post(
     post_id: int,
     share_data: ShareRequest,

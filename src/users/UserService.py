@@ -2,7 +2,8 @@ from typing import Optional
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import delete, select
-
+import secrets
+from ..tasks.mail_task import send_confirmation_email
 from ..users.utils import generate_password_hash
 from ..db.models import User, GroupMember
 from .UserSchemas import UserCreate, UserUpdate
@@ -27,7 +28,7 @@ cloudinary.config(
 class UserService:
 
     async def get_all_users(self, session: AsyncSession, username: Optional[str] = None):
-        statement = select(User)
+        statement = select(User).where(User.is_banned == False)  # ADD THIS
         if username:
             statement = statement.where(User.username.ilike(f"%{username}%"))
         result = await session.exec(statement)
@@ -55,13 +56,20 @@ class UserService:
 
     async def create_user(self, user_data: UserCreate, session: AsyncSession):
         user_data_dict = user_data.model_dump()
-
         user_data_dict["password"] = generate_password_hash(user_data_dict["password"])
+
+        token = secrets.token_urlsafe(32)
+        user_data_dict["verification_token"] = token
+        user_data_dict["is_verified"] = False
+
         new_user = User(**user_data_dict)
 
         session.add(new_user)
 
         await session.commit()
+        
+        send_confirmation_email.delay(new_user.email, new_user.username, token)
+
 
         return new_user
     
@@ -131,6 +139,7 @@ class UserService:
         await session.commit()
         await session.refresh(user)
         return user
+    
     async def get_nearby_users(self, latitude: float, longitude: float, radius_km: float, session: AsyncSession):
 
         result = await session.exec(

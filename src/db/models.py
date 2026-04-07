@@ -14,6 +14,13 @@ class User(SQLModel, table=True):
     username: str = Field(index=True, nullable=False)
     email: str = Field(index=True, nullable=False, unique=True)
     password: str
+    role: str = Field(
+        sa_column=Column(pg.VARCHAR, nullable=False, server_default="user")
+    )
+    is_verified: bool = Field(default=False)
+    is_banned: bool = Field(default=False)
+    ban_reason: Optional[str] = Field(default=None)
+    verification_token: Optional[str] = Field(default=None)
 
     profile_image_path: Optional[str] = None
     latitude: Optional[float] = Field(default=None, nullable=True)
@@ -91,6 +98,8 @@ class Post(SQLModel, table=True):
     author_id: int = Field(foreign_key="users.id")
     content: str
     image_path: Optional[str] = None
+    is_flagged: bool = Field(default=False)
+    flag_reason: Optional[str] = Field(default=None)
 
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
@@ -322,3 +331,15 @@ class HelpApplication(SQLModel, table=True):
     )
 
     request: Optional[RequestHelp] = Relationship(back_populates="applications")
+
+class UserCompressedImage(SQLModel, table=True):
+    __tablename__ = "user_compressed_images"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="users.id", unique=True)
+    image_data: bytes = Field(sa_column=Column(pg.BYTEA, nullable=False))
+    original_size: int
+    compressed_size: int
+    created_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )

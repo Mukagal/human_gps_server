@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import List
-
+from ..middlware.rate_limit import limiter, WRITE_LIMIT, GENERAL_LIMIT_MIN
 from ..users.dependencies import get_current_user
 
 from ..db.main import get_session
@@ -14,7 +14,9 @@ message_router = APIRouter()
 message_service = MessageService()
 
 @message_router.post("/conversations/{conversation_id}/messages")
+@limiter.limit(WRITE_LIMIT)
 async def send_message(
+    request:Request,
     conversation_id: int,
     message_data: MessageSend,
     session: AsyncSession = Depends(get_session),
@@ -39,7 +41,9 @@ async def get_messages(
     return messages[:limit]
 
 @message_router.patch("/messages/{message_id}")
+@limiter.limit(WRITE_LIMIT)
 async def update_message(
+    request:Request,
     message_id: int,
     update_data: MessageUpdate,
     session: AsyncSession = Depends(get_session),
@@ -51,7 +55,9 @@ async def update_message(
     return message
 
 @message_router.delete("/messages/{message_id}")
+@limiter.limit(WRITE_LIMIT)
 async def delete_message(
+    request:Request,
     message_id: int,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)

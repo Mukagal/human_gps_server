@@ -8,10 +8,39 @@
   },
   "item": [
     {
+      "name": "monitoring",
+      "item": [
+        {
+          "name": "Request Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/stats",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Users",
       "item": [
         {
-          "name": "Get All User",
+          "name": "Get Users",
           "request": {
             "method": "GET",
             "header": [],
@@ -78,7 +107,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/v1/users/1/profile-image",
+              "raw": "http://127.0.0.1:8000/api/v1/users/4/profile-image",
               "protocol": "http",
               "host": [
                 "127",
@@ -91,7 +120,7 @@
                 "api",
                 "v1",
                 "users",
-                "1",
+                "4",
                 "profile-image"
               ]
             }
@@ -132,13 +161,46 @@
           "response": []
         },
         {
+          "name": "Create User Account with Verification",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"killer\",\r\n  \"email\": \"sabituteuliev425@gmail.com\",\r\n  \"password\": \"string\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/signup-with-verification",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "signup-with-verification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login Users",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"230103162@sdu.edu.kz\",\r\n  \"password\": \"qwerty\"\r\n}",
+              "raw": "{\r\n  \"email\": \"sabituteuliev425@gmail.com\",\r\n  \"password\": \"string\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -251,7 +313,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsInVzZXJfaWQiOiIzIn0sImV4cCI6MTc3MzcwMTU2MiwianRpIjoiNmQ4YjFiNDMtMGI3Ni00MTczLWIyNTYtYmIyMDVmMmZmNDJlIiwicmVmcmVzaCI6ZmFsc2V9.HICVWnnRyNTMWVPnJQea11RKsddBFHK7LR6x9Awm3Ig",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic2FiaXR1dGV1bGlldjQyNUBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNSJ9LCJleHAiOjE3NzU0MzMzMzUsImp0aSI6IjYzYmNmNWYyLTliZDUtNGY4Ni04NGEwLWQwNjljNmZiNmY3YiIsInJlZnJlc2giOmZhbHNlfQ.hf8qjHaK54myWnVMKY6keEApXoJOVephGlrkWOBXw8I",
                   "type": "string"
                 }
               ]
@@ -578,6 +640,117 @@
                 "users",
                 "1",
                 "shared-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Profile Image With Compression",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic2FiaXR1dGV1bGlldjQyNUBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNSJ9LCJleHAiOjE3NzU0MzMzMzUsImp0aSI6IjYzYmNmNWYyLTliZDUtNGY4Ni04NGEwLWQwNjljNmZiNmY3YiIsInJlZnJlc2giOmZhbHNlfQ.hf8qjHaK54myWnVMKY6keEApXoJOVephGlrkWOBXw8I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "07bda512-e45b-4010-a911-2d34bf8a623e",
+                  "src": "/C:/Users/amank/OneDrive/Изображения/Снимки экрана/Снимок экрана 2025-10-09 103458.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/users/me/profile-image-compressed",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me",
+                "profile-image-compressed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/forgot-password?email=sabituteuliev425@gmail.com",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "forgot-password"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "sabituteuliev425@gmail.com",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\":\"mN29SxwBQW67glkFA7-7yhsuWTcT3iT_Bsu1mTQA_S0\",\r\n    \"new_password\": \"newpassword123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/reset-password",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "reset-password"
               ]
             }
           },

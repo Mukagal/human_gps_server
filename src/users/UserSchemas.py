@@ -31,6 +31,10 @@ class UserModel(BaseModel):
     created_at: datetime
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+    role: str = "user"
+    is_verified: bool = False
+    is_banned: bool = False
+    ban_reason: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -53,6 +57,10 @@ class UserSafe(BaseModel):
     created_at: datetime
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+    role: str = "user"
+    is_verified: bool = False
+    is_banned: bool = False
+    ban_reason: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -60,3 +68,7 @@ class UserSafe(BaseModel):
 class UserLocationUpdate(BaseModel):
     latitude: float = Field(ge=-90, le=90)
     longitude: float = Field(ge=-180, le=180)
+
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str = Field(min_length=6)

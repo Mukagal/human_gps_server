@@ -46,7 +46,7 @@ class PostService:
         skip: int = 0,
         limit: int = 20,
     ) -> list:
-        statement = select(Post)
+        statement = select(Post).where(Post.is_flagged == False)
 
         if keyword:
             statement = statement.where(Post.content.ilike(f"%{keyword}%"))

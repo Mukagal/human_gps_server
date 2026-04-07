@@ -2,6 +2,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from ..db.models import User
+
 from ..db.main import get_session
 from ..users.UserService import UserService
 from ..users.utils import decode_token, is_jti_blocked
@@ -35,6 +37,14 @@ async def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found"
         )
+
+    if user.is_banned:
+        raise HTTPException(
+            status_code=403,
+            detail=f"Your account has been banned. Reason: {user.ban_reason or 'Policy violation'}"
+        )
+
+
     return user
 
 
@@ -51,3 +61,17 @@ async def get_optional_user(
     if jti and await is_jti_blocked(jti):
         return None
     return await UserService().get_user_by_email(token_data["user"]["email"], session)
+
+from typing import Any, List
+
+class RoleChecker:
+    def __init__(self, allowed_roles: List[str]) -> None:
+        self.allowed_roles = allowed_roles
+
+    def __call__(self, current_user: User = Depends(get_current_user)) -> Any:
+        if current_user.role in self.allowed_roles:
+            return True
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not allowed to perform this action."
+        )
