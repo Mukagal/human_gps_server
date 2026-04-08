@@ -5,7 +5,7 @@ from typing import Optional
 from ..db.main import get_session
 from ..users.dependencies import get_current_user
 from ..db.models import User, HelpCategory
-from .KomekSchemas import KomekCreate, KomekOut, ApplyToRequestCreate, KomekNearbyOut, RatingRequest, UserRatingOut
+from .KomekSchemas import KomekCreate, KomekOut, ApplyToRequestCreate, KomekNearbyOut, UserRatingOut, RatingRequest
 from .KomekService import KomekService
 
 komek_router = APIRouter()
@@ -117,7 +117,6 @@ async def get_nearby_requests(
     
 ):
     return await service.get_nearby_requests(latitude, longitude, radius_km, category, session)
-
 
 @komek_router.post("/ratings", response_model=UserRatingOut, status_code=201)
 async def submit_rating(

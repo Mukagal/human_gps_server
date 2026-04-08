@@ -40,14 +40,14 @@ def get_stats():
         }
     return result
 
-async def profiling_middleware(request: Request, call_next):
-    should_profile = PROFILING_ENABLED or request.query_params.get("profile") == "1"
-    start = time.perf_counter()
+def is_profiling_enabled():
+    return os.getenv("PROFILING_ENABLED", "false").lower() in ("true", "1", "yes")
 
+async def profiling_middleware(request: Request, call_next):
+    should_profile = PROFILING_ENABLED or request.query_params.get("profile") == "1" 
+    start = time.perf_counter()
     if not should_profile:
         response = await call_next(request)
-        duration_ms = (time.perf_counter() - start) * 1000
-        record_request(request.method, request.url.path, duration_ms, response.status_code)
         return response
 
     profiler = Profiler(interval=PROFILING_INTERVAL, async_mode="enabled")

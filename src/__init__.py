@@ -1,3 +1,7 @@
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
 from .users.UserRoutes import user_router
 from .messages.MessageRoutes import message_router
 from .conversations.ConversationRoutes import conversation_router
@@ -45,14 +49,12 @@ async def request_stats():
     
     stats = get_stats()
 
-    # Group by method
     grouped = {"GET": [], "POST": [], "PATCH": [], "DELETE": [], "OTHER": []}
     for endpoint, data in stats.items():
         m = data["method"]
         row = {"endpoint": endpoint, **data}
         grouped.get(m, grouped["OTHER"]).append(row)
 
-    # Sort each group by avg_ms descending
     for m in grouped:
         grouped[m].sort(key=lambda x: x["avg_ms"], reverse=True)
 
@@ -80,7 +82,6 @@ async def request_stats():
     return f"""
     <!DOCTYPE html><html><head>
     <title>API Stats</title>
-    <meta http-equiv="refresh" content="5">
     <style>
         body {{ font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 2rem; }}
         h1 {{ color: #58a6ff; }}
@@ -91,7 +92,7 @@ async def request_stats():
         td {{ padding: 8px 12px; border-bottom: 1px solid #21262d; }}
         tr:hover td {{ background: #161b22; }}
         tr.slow td {{ color: #f0883e; }}
-        tr.slow td:first-child::after {{ content: ' ⚠️'; }}
+        tr.slow td:first-child::after {{ content: ' '; }}
         .section {{ margin-bottom: 2rem; }}
         .note {{ color: #8b949e; font-size: 0.8rem; margin-top: 0.5rem; }}
     </style>
@@ -116,7 +117,8 @@ app.add_middleware(
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware)
 
-app.add_middleware(BaseHTTPMiddleware, dispatch=profiling_middleware)
+if os.getenv("PROFILING_ENABLED", "false").lower() in ("true", "1", "yes"):
+    app.add_middleware(BaseHTTPMiddleware, dispatch=profiling_middleware)
 
 app.state.limiter = limiter
 
