@@ -343,3 +343,18 @@ class UserCompressedImage(SQLModel, table=True):
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
     )
+
+
+class UserRating(SQLModel, table=True):
+    __tablename__ = "user_ratings"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    rater_id: int = Field(foreign_key="users.id")
+    target_user_id: int = Field(foreign_key="users.id")
+    request_id: int = Field(foreign_key="request_helps.id")
+    rating: int = Field(ge=1, le=5)
+    comment: Optional[str] = None
+
+    created_at: datetime = Field(
+        sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
+    )

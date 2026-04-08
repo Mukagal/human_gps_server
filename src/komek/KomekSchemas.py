@@ -53,3 +53,22 @@ class KomekNearbyOut(BaseModel):
 
 class ApplyToRequestCreate(BaseModel):
     message: Optional[str] = Field(default=None, max_length=500)
+
+
+class RatingRequest(BaseModel):
+    target_user_id: int
+    request_id: int
+    rating: int = Field(ge=1, le=5)
+    comment: Optional[str] = Field(default=None, max_length=500)
+
+
+class UserRatingOut(BaseModel):
+    id: int
+    rater_id: int
+    target_user_id: int
+    rating: int
+    comment: Optional[str]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

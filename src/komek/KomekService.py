@@ -7,8 +7,8 @@ from sqlmodel import select, or_
 from fastapi import HTTPException, status
 from typing import Optional
 import math
-from ..db.models import RequestHelp, HelpApplication, RequestStatus, ApplicationStatus, User
-from .KomekSchemas import KomekCreate, ApplyToRequestCreate
+from ..db.models import RequestHelp, HelpApplication, RequestStatus, ApplicationStatus, User, UserRating
+from .KomekSchemas import KomekCreate, ApplyToRequestCreate, RatingRequest, UserRatingOut
 
 
 class KomekService:
@@ -236,3 +236,54 @@ class KomekService:
 
         nearby.sort(key=lambda x: x["distance_km"])
         return nearby
+
+    async def submit_rating(self, rater_id: int, data: RatingRequest, session: AsyncSession):
+        # Check if the request is completed
+        request = await self.get_request(data.request_id, session)
+        if not request:
+            raise HTTPException(status_code=404, detail="Request not found")
+        if request.status != RequestStatus.COMPLETED:
+            raise HTTPException(status_code=400, detail="Request must be completed to submit rating")
+
+        # Check if rater is the requester
+        if request.requester_id != rater_id:
+            raise HTTPException(status_code=403, detail="Only the requester can rate the helper")
+
+        # Check if target_user_id is the accepted applicant
+        accepted_app = None
+        for app in request.applications:
+            if app.status == ApplicationStatus.ACCEPTED:
+                accepted_app = app
+                break
+        if not accepted_app or accepted_app.applicant_id != data.target_user_id:
+            raise HTTPException(status_code=400, detail="Can only rate the accepted helper")
+
+        # Check if already rated
+        existing = await session.exec(
+            select(UserRating).where(
+                UserRating.rater_id == rater_id,
+                UserRating.request_id == data.request_id
+            )
+        )
+        if existing.first():
+            raise HTTPException(status_code=409, detail="You have already rated this request")
+
+        # Create rating
+        rating = UserRating(
+            rater_id=rater_id,
+            target_user_id=data.target_user_id,
+            request_id=data.request_id,
+            rating=data.rating,
+            comment=data.comment,
+        )
+        session.add(rating)
+        await session.commit()
+        await session.refresh(rating)
+        return rating
+
+    async def get_user_ratings(self, user_id: int, session: AsyncSession):
+        result = await session.exec(
+            select(UserRating).where(UserRating.target_user_id == user_id)
+        )
+        ratings = result.all()
+        return [UserRatingOut.from_orm(r) for r in ratings]
