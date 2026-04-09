@@ -9,6 +9,7 @@ from typing import Optional
 import math
 from ..db.models import RequestHelp, HelpApplication, RequestStatus, ApplicationStatus, User, UserRating
 from .KomekSchemas import KomekCreate, ApplyToRequestCreate, RatingRequest, UserRatingOut
+from sqlalchemy import func
 
 
 class KomekService:
@@ -33,9 +34,12 @@ class KomekService:
             return "requester"
 
         app_result = await session.exec(
-            select(HelpApplication).where(
+            select(HelpApplication)
+            .join(RequestHelp, HelpApplication.request_id == RequestHelp.id)
+            .where(
                 HelpApplication.applicant_id == user_id,
-                HelpApplication.status == ApplicationStatus.ACCEPTED
+                HelpApplication.status == ApplicationStatus.ACCEPTED,
+                RequestHelp.status.in_([RequestStatus.OPEN, RequestStatus.IN_PROGRESS]),
             )
         )
         active_help = app_result.first()
@@ -238,18 +242,15 @@ class KomekService:
         return nearby
 
     async def submit_rating(self, rater_id: int, data: RatingRequest, session: AsyncSession):
-        # Check if the request is completed
         request = await self.get_request(data.request_id, session)
         if not request:
             raise HTTPException(status_code=404, detail="Request not found")
         if request.status != RequestStatus.COMPLETED:
             raise HTTPException(status_code=400, detail="Request must be completed to submit rating")
 
-        # Check if rater is the requester
         if request.requester_id != rater_id:
             raise HTTPException(status_code=403, detail="Only the requester can rate the helper")
 
-        # Check if target_user_id is the accepted applicant
         accepted_app = None
         for app in request.applications:
             if app.status == ApplicationStatus.ACCEPTED:
@@ -258,7 +259,6 @@ class KomekService:
         if not accepted_app or accepted_app.applicant_id != data.target_user_id:
             raise HTTPException(status_code=400, detail="Can only rate the accepted helper")
 
-        # Check if already rated
         existing = await session.exec(
             select(UserRating).where(
                 UserRating.rater_id == rater_id,
@@ -268,7 +268,6 @@ class KomekService:
         if existing.first():
             raise HTTPException(status_code=409, detail="You have already rated this request")
 
-        # Create rating
         rating = UserRating(
             rater_id=rater_id,
             target_user_id=data.target_user_id,
@@ -279,11 +278,46 @@ class KomekService:
         session.add(rating)
         await session.commit()
         await session.refresh(rating)
+
+        await self._update_user_average_rating(data.target_user_id, session)
+
         return rating
+
+    async def _update_user_average_rating(self, user_id: int, session: AsyncSession):
+        result = await session.exec(
+            select(UserRating.rating).where(UserRating.target_user_id == user_id)
+        )
+        ratings = result.all()
+        
+        if ratings:
+            average_rating = float(sum(ratings)) / len(ratings)
+        else:
+            average_rating = 0.0
+        
+        user_result = await session.exec(
+            select(User).where(User.id == user_id)
+        )
+        user = user_result.first()
+        if user:
+            user.rating = average_rating
+            await session.commit()
 
     async def get_user_ratings(self, user_id: int, session: AsyncSession):
         result = await session.exec(
+            select(User).where(User.id == user_id)
+        )
+        user = result.first()
+        if not user:
+            return {"average_rating": 0.0, "total_ratings": 0}
+        
+        rating_count_result = await session.exec(
             select(UserRating).where(UserRating.target_user_id == user_id)
         )
-        ratings = result.all()
-        return [UserRatingOut.from_orm(r) for r in ratings]
+        total_ratings = len(rating_count_result.all())
+        
+        return {
+            "average_rating": user.rating,
+            "total_ratings": total_ratings
+        }
+    
+   

@@ -25,6 +25,7 @@ class User(SQLModel, table=True):
     profile_image_path: Optional[str] = None
     latitude: Optional[float] = Field(default=None, nullable=True)
     longitude: Optional[float] = Field(default=None, nullable=True)
+    rating: float = Field(default=0.0)
 
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)

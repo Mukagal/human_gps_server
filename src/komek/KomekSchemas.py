@@ -72,3 +72,8 @@ class UserRatingOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserAverageRating(BaseModel):
+    average_rating: float
+    total_ratings: int

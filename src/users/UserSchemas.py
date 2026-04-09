@@ -35,6 +35,7 @@ class UserModel(BaseModel):
     is_verified: bool = False
     is_banned: bool = False
     ban_reason: Optional[str] = None
+    rating: float = 0.0
 
     class Config:
         from_attributes = True
