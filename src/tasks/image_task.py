@@ -4,6 +4,7 @@ import logging
 from PIL import Image
 from ..celery import celery
 import psycopg
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,9 @@ def compress_and_store_image(user_id: int, image_bytes_b64: str, db_url: str):
         f"saved={((original_size - compressed_size) / original_size * 100):.1f}%"
     )
 
-    conn = psycopg.connect(db_url.replace("+asyncpg", ""))
+    clean_url = db_url.replace("+asyncpg", "")
+    clean_url = re.sub(r'\?.*$', '', clean_url) 
+    conn = psycopg.connect(clean_url, sslmode='require')
     cur = conn.cursor()
     cur.execute(
         """

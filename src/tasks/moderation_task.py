@@ -4,10 +4,9 @@ import requests
 import psycopg
 from ..celery import celery
 from ..config import Config
-from datetime import datetime
 import cloudinary
 import cloudinary.uploader
-
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +54,9 @@ def moderate_image(post_id: int, image_bytes_b64: str, db_url: str):
     )
 
     if is_flagged:
-        conn = psycopg.connect(db_url.replace("+asyncpg", ""))
+        clean_url = db_url.replace("+asyncpg", "")
+        clean_url = re.sub(r'\?.*$', '', clean_url)  
+        conn = psycopg.connect(clean_url, sslmode='require')
         cur = conn.cursor()
 
         cur.execute(
@@ -141,7 +142,9 @@ def moderate_profile_image(user_id: int, image_bytes_b64: str, db_url: str):
     logger.info(f"[Moderation] Profile user_id={user_id} | {flag_reason} | flagged={is_flagged}")
 
     if is_flagged:
-        conn = psycopg.connect(db_url.replace("+asyncpg", ""))
+        clean_url = db_url.replace("+asyncpg", "")
+        clean_url = re.sub(r'\?.*$', '', clean_url) 
+        conn = psycopg.connect(clean_url, sslmode='require')
         cur = conn.cursor()
         cur.execute(
             "UPDATE users SET profile_image_path = NULL, is_banned = TRUE, ban_reason = %s WHERE id = %s",
