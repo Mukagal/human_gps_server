@@ -74,32 +74,32 @@ def moderate_image(post_id: int, image_bytes_b64: str, db_url: str):
                 (f"Posted flagged content: {flag_reason}", author_id)
             )
             logger.warning(f"[Moderation]  User {author_id} banned for post {post_id}: {flag_reason}")
-        cur.execute("SELECT image_path FROM posts WHERE author_id = %s", (author_id,))
-        post_images = cur.fetchall()
+            cur.execute("SELECT image_path FROM posts WHERE author_id = %s", (author_id,))
+            post_images = cur.fetchall()
 
-        cur.execute("SELECT image_path FROM stories WHERE author_id = %s", (author_id,))
-        story_images = cur.fetchall()   
+            cur.execute("SELECT image_path FROM stories WHERE author_id = %s", (author_id,))
+            story_images = cur.fetchall()   
 
-        cloudinary.config(
-            cloud_name=Config.CLOUDINARY_CLOUD_NAME,
-            api_key=Config.CLOUDINARY_API_KEY,
-            api_secret=Config.CLOUDINARY_API_SECRET
-        )
+            cloudinary.config(
+                cloud_name=Config.CLOUDINARY_CLOUD_NAME,
+                api_key=Config.CLOUDINARY_API_KEY,
+                api_secret=Config.CLOUDINARY_API_SECRET
+            )
 
-        for (img_url,) in post_images + story_images:
-            if img_url:
-                public_id = "/".join(img_url.split("/")[-2:]).split(".")[0]
-                try:
-                    cloudinary.uploader.destroy(public_id)
-                except Exception as e:
-                    logger.error(f"[Moderation] Failed to delete cloudinary image {public_id}: {e}")
+            for (img_url,) in post_images + story_images:
+                if img_url:
+                    public_id = "/".join(img_url.split("/")[-2:]).split(".")[0]
+                    try:
+                        cloudinary.uploader.destroy(public_id)
+                    except Exception as e:
+                        logger.error(f"[Moderation] Failed to delete cloudinary image {public_id}: {e}")
 
-        cur.execute("UPDATE posts SET image_path = NULL, content = '[removed]' WHERE author_id = %s", (author_id,))
-        cur.execute("UPDATE stories SET image_path = NULL WHERE author_id = %s", (author_id,))
+            cur.execute("UPDATE posts SET image_path = NULL, content = '[removed]' WHERE author_id = %s", (author_id,))
+            cur.execute("UPDATE stories SET image_path = NULL WHERE author_id = %s", (author_id,))
 
-        cur.execute("DELETE FROM user_compressed_images WHERE user_id = %s", (author_id,))
+            cur.execute("DELETE FROM user_compressed_images WHERE user_id = %s", (author_id,))
 
-        logger.info(f"[Moderation] Cleared media for banned user {author_id}")         
+            logger.info(f"[Moderation] Cleared media for banned user {author_id}")         
 
         conn.commit()
         cur.close()
