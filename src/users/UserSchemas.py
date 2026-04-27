@@ -62,6 +62,7 @@ class UserSafe(BaseModel):
     is_verified: bool = False
     is_banned: bool = False
     ban_reason: Optional[str] = None
+    rating: float = None
 
     class Config:
         from_attributes = True
