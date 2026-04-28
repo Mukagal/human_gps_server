@@ -7,6 +7,7 @@ from ..db.models import HelpCategory, RequestStatus, ApplicationStatus
 class HelpApplicationOut(BaseModel):
     id: int
     applicant_id: int
+    applicant_username: Optional[str] = None
     message: Optional[str]
     status: ApplicationStatus
     applied_at: datetime

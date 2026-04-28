@@ -14,6 +14,41 @@ from sqlalchemy import func
 
 class KomekService:
 
+    async def _serialize_request_with_applicant_usernames(self, request: Optional[RequestHelp], session: AsyncSession):
+        if not request:
+            return None
+
+        applicant_ids = list({app.applicant_id for app in request.applications}) if request.applications else []
+        username_by_id = {}
+        if applicant_ids:
+            users_result = await session.exec(
+                select(User).where(User.id.in_(applicant_ids))
+            )
+            users = users_result.all()
+            username_by_id = {user.id: user.username for user in users}
+
+        return {
+            "id": request.id,
+            "requester_id": request.requester_id,
+            "title": request.title,
+            "description": request.description,
+            "category": request.category,
+            "status": request.status,
+            "created_at": request.created_at,
+            "expires_at": request.expires_at,
+            "applications": [
+                {
+                    "id": app.id,
+                    "applicant_id": app.applicant_id,
+                    "applicant_username": username_by_id.get(app.applicant_id),
+                    "message": app.message,
+                    "status": app.status,
+                    "applied_at": app.applied_at,
+                }
+                for app in request.applications
+            ],
+        }
+
     async def get_request(self, request_id: int, session: AsyncSession):
         result = await session.exec(
             select(RequestHelp)
@@ -67,7 +102,8 @@ class KomekService:
         session.add(new_request)
         await session.commit()
         await session.refresh(new_request)
-        return await self.get_request(new_request.id, session)
+        request = await self.get_request(new_request.id, session)
+        return await self._serialize_request_with_applicant_usernames(request, session)
 
     
 
@@ -80,7 +116,11 @@ class KomekService:
         if category:
             stmt = stmt.where(RequestHelp.category == category)
         result = await session.exec(stmt)
-        return result.all()
+        requests = result.all()
+        serialized_requests = []
+        for request in requests:
+            serialized_requests.append(await self._serialize_request_with_applicant_usernames(request, session))
+        return serialized_requests
 
     async def cancel_request(self, request_id: int, user_id: int, session: AsyncSession):
         request = await self.get_request(request_id, session)
@@ -93,7 +133,8 @@ class KomekService:
         request.status = RequestStatus.CANCELLED
         await session.commit()
         await session.refresh(request)
-        return await self.get_request(request.id, session)
+        request = await self.get_request(request.id, session)
+        return await self._serialize_request_with_applicant_usernames(request, session)
 
     async def apply_to_request(self, request_id: int, applicant_id: int, data: ApplyToRequestCreate, session: AsyncSession):
         request = await self.get_request(request_id, session)
@@ -152,7 +193,8 @@ class KomekService:
         request.status = RequestStatus.IN_PROGRESS
         await session.commit()
         await session.refresh(request)
-        return await self.get_request(request.id, session)
+        request = await self.get_request(request.id, session)
+        return await self._serialize_request_with_applicant_usernames(request, session)
 
     async def reject_application(self, request_id: int, application_id: int, requester_id: int, session: AsyncSession):
         request = await self.get_request(request_id, session)
@@ -187,7 +229,8 @@ class KomekService:
         request.status = RequestStatus.COMPLETED
         await session.commit()
         await session.refresh(request)
-        return await self.get_request(request.id, session)
+        request = await self.get_request(request.id, session)
+        return await self._serialize_request_with_applicant_usernames(request, session)
 
     async def get_my_requests(self, user_id: int, session: AsyncSession):
         result = await session.exec(
@@ -195,7 +238,11 @@ class KomekService:
             .where(RequestHelp.requester_id == user_id)
             .options(selectinload(RequestHelp.applications))
         )
-        return result.all()
+        requests = result.all()
+        serialized_requests = []
+        for request in requests:
+            serialized_requests.append(await self._serialize_request_with_applicant_usernames(request, session))
+        return serialized_requests
 
     async def get_my_applications(self, user_id: int, session: AsyncSession):
         result = await session.exec(
