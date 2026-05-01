@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 
 class UserBase(BaseModel):
@@ -16,6 +16,8 @@ class UserUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = Field(default=None, min_length=6)
+    professions: Optional[List[str]] = Field(default=None)
+
 
 
 class UserLogin(BaseModel):
@@ -36,6 +38,8 @@ class UserModel(BaseModel):
     is_banned: bool = False
     ban_reason: Optional[str] = None
     rating: float = 0.0
+    professions: Optional[List[str]] = Field(default=None)
+
 
     class Config:
         from_attributes = True
@@ -63,6 +67,8 @@ class UserSafe(BaseModel):
     is_banned: bool = False
     ban_reason: Optional[str] = None
     rating: float = None
+    professions: Optional[List[str]] = Field(default=None)
+
 
     class Config:
         from_attributes = True

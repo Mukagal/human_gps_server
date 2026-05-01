@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
 from datetime import datetime, timedelta
 import sqlalchemy.dialects.postgresql as pg
-from sqlalchemy import Column, ForeignKey, Integer, UniqueConstraint
+from sqlalchemy import ARRAY, Column, ForeignKey, Integer, UniqueConstraint, String
 import enum
 
 
@@ -21,11 +21,15 @@ class User(SQLModel, table=True):
     is_banned: bool = Field(default=False)
     ban_reason: Optional[str] = Field(default=None)
     verification_token: Optional[str] = Field(default=None)
-
     profile_image_path: Optional[str] = None
     latitude: Optional[float] = Field(default=None, nullable=True)
     longitude: Optional[float] = Field(default=None, nullable=True)
     rating: float = Field(default=0.0)
+    professions: Optional[List[str]] = Field(
+        default=None,
+        sa_column=Column(ARRAY(String), nullable=True)
+    )
+
 
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP, default=datetime.utcnow)
