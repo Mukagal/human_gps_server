@@ -30,6 +30,7 @@ class KomekCreate(BaseModel):
 class KomekOut(BaseModel):
     id: int
     requester_id: int
+    requester_username: Optional[str] = None
     title: str
     description: str
     category: HelpCategory

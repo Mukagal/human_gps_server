@@ -14,6 +14,11 @@ from sqlalchemy import func
 
 class KomekService:
 
+    async def _get_username(self, user_id: int, session: AsyncSession) -> str | None:
+        result = await session.exec(select(User).where(User.id == user_id))
+        user = result.first()
+        return user.username if user else None
+
     async def _serialize_request_with_applicant_usernames(self, request: Optional[RequestHelp], session: AsyncSession):
         if not request:
             return None
@@ -48,6 +53,12 @@ class KomekService:
                 for app in request.applications
             ],
         }
+    async def _serialize_request_with_requester(self, request: RequestHelp, session: AsyncSession):
+        serialized = await self._serialize_request_with_applicant_usernames(request, session)
+        requester = await session.exec(select(User).where(User.id == request.requester_id))
+        requester_user = requester.first()
+        serialized["requester_username"] = requester_user.username if requester_user else None
+        return serialized
 
     async def get_request(self, request_id: int, session: AsyncSession):
         result = await session.exec(
@@ -108,19 +119,12 @@ class KomekService:
     
 
     async def get_open_requests(self, category=None, session: AsyncSession = None):
-        stmt = (
-            select(RequestHelp)
-            .where(RequestHelp.status == RequestStatus.OPEN)
-            .options(selectinload(RequestHelp.applications))
-        )
+        statement = select(RequestHelp).where(RequestHelp.status == RequestStatus.OPEN).options(selectinload(RequestHelp.applications)) 
         if category:
-            stmt = stmt.where(RequestHelp.category == category)
-        result = await session.exec(stmt)
+            statement = statement.where(RequestHelp.category == category)
+        result = await session.exec(statement)
         requests = result.all()
-        serialized_requests = []
-        for request in requests:
-            serialized_requests.append(await self._serialize_request_with_applicant_usernames(request, session))
-        return serialized_requests
+        return [await self._serialize_request_with_requester(r, session) for r in requests]
 
     async def cancel_request(self, request_id: int, user_id: int, session: AsyncSession):
         request = await self.get_request(request_id, session)
@@ -270,8 +274,7 @@ class KomekService:
 
         nearby = []
         for req in requests:
-            from sqlmodel import select as sel
-            user_result = await session.exec(sel(User).where(User.id == req.requester_id))
+            user_result = await session.exec(select(User).where(User.id == req.requester_id))
             user = user_result.first()
             if not user or user.latitude is None or user.longitude is None:
                 continue
