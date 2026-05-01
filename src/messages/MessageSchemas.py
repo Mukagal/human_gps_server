@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional
 
@@ -6,10 +6,24 @@ class MessageBase(BaseModel):
     content: str
     sender_id: int
     receiver_id: int
+
+    @field_validator('content')
+    @classmethod
+    def content_must_not_be_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Message content cannot be empty')
+        return v.strip()
     
 class MessageSend(BaseModel):
     content: str
 
+    @field_validator('content')
+    @classmethod
+    def content_must_not_be_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Message content cannot be empty')
+        return v.strip()
+    
 class MessageResponse(MessageBase):
     id: int
     sent_at: datetime
@@ -21,6 +35,13 @@ class MessageResponse(MessageBase):
 
 class MessageUpdate(BaseModel):
     content: str
+    
+    @field_validator('content')
+    @classmethod
+    def content_must_not_be_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Message content cannot be empty')
+        return v.strip()
 
 class MessageDelete(BaseModel):
     id: int
