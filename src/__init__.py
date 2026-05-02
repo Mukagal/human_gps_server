@@ -82,6 +82,7 @@ async def request_stats():
     return f"""
     <!DOCTYPE html><html><head>
     <title>API Stats</title>
+    <meta http-equiv="refresh" content="5">
     <style>
         body {{ font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 2rem; }}
         h1 {{ color: #58a6ff; }}
@@ -117,8 +118,7 @@ app.add_middleware(
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware)
 
-if os.getenv("PROFILING_ENABLED", "false").lower() in ("true", "1", "yes"):
-    app.add_middleware(BaseHTTPMiddleware, dispatch=profiling_middleware)
+app.add_middleware(BaseHTTPMiddleware, dispatch=profiling_middleware)
 
 app.state.limiter = limiter
 
@@ -131,6 +131,6 @@ app.include_router(user_router, prefix=f"/api/{version}", tags=["users"])
 app.include_router(conversation_router, prefix=f"/api/{version}", tags=["conversations"])
 app.include_router(message_router, prefix=f"/api/{version}", tags=["messages"])
 app.include_router(post_router, prefix=f"/api/{version}", tags=["posts"])
-app.include_router(story_router, prefix=f"/api/{version}", tags=["story"])
-app.include_router(group_router, prefix=f"/api/{version}", tags=["group"])
+#app.include_router(story_router, prefix=f"/api/{version}", tags=["story"])
+#app.include_router(group_router, prefix=f"/api/{version}", tags=["group"])
 app.include_router(komek_router, prefix=f"/api/{version}", tags=["komek"])
