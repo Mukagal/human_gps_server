@@ -6,8 +6,8 @@ from .users.UserRoutes import user_router
 from .messages.MessageRoutes import message_router
 from .conversations.ConversationRoutes import conversation_router
 from .post.PostRoutes import post_router
-from .story.StoryRoutes import story_router
-from .groups.GroupRoutes import group_router
+#from .story.StoryRoutes import story_router
+#from .groups.GroupRoutes import group_router
 from .komek.KomekRoutes import komek_router
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
