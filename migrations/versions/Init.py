@@ -13,7 +13,6 @@ import sqlmodel
 
 from sqlalchemy.dialects import postgresql
 
-# revision identifiers, used by Alembic.
 revision: str = '0001_initial_schema'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
@@ -22,10 +21,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Create full schema from scratch."""
-
-    # ------------------------------------------------------------------
-    # ENUM TYPES — use DO blocks for compatibility with older PostgreSQL
-    # ------------------------------------------------------------------
     op.execute("""
         DO $$ BEGIN
             CREATE TYPE helpcategory AS ENUM ('TUTOR', 'PHYSICAL', 'RENTAL', 'OTHER');
@@ -45,9 +40,6 @@ def upgrade() -> None:
         END $$;
     """)
 
-    # ------------------------------------------------------------------
-    # users
-    # ------------------------------------------------------------------
     op.create_table(
         'users',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -70,13 +62,9 @@ def upgrade() -> None:
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=False)
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
 
-    # Backfill non-nullable columns for existing rows (safe on fresh DB, required for existing)
     op.execute("UPDATE users SET is_banned = FALSE WHERE is_banned IS NULL")
     op.execute("UPDATE users SET rating = 0 WHERE rating IS NULL")
 
-    # ------------------------------------------------------------------
-    # conversations
-    # ------------------------------------------------------------------
     op.create_table(
         'conversations',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -89,9 +77,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('user1_id', 'user2_id', name='unique_conversation'),
     )
 
-    # ------------------------------------------------------------------
-    # messages
-    # ------------------------------------------------------------------
     op.create_table(
         'messages',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -107,9 +92,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # group_chats
-    # ------------------------------------------------------------------
     op.create_table(
         'group_chats',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -120,9 +102,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # group_members
-    # ------------------------------------------------------------------
     op.create_table(
         'group_members',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -135,9 +114,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('group_id', 'user_id', name='unique_group_member'),
     )
 
-    # ------------------------------------------------------------------
-    # group_messages
-    # ------------------------------------------------------------------
     op.create_table(
         'group_messages',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -150,9 +126,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # posts
-    # ------------------------------------------------------------------
     op.create_table(
         'posts',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -167,9 +140,6 @@ def upgrade() -> None:
     )
     op.execute("UPDATE posts SET is_flagged = FALSE WHERE is_flagged IS NULL")
 
-    # ------------------------------------------------------------------
-    # post_likes
-    # ------------------------------------------------------------------
     op.create_table(
         'post_likes',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -182,9 +152,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('post_id', 'user_id', name='unique_post_like'),
     )
 
-    # ------------------------------------------------------------------
-    # post_comments
-    # ------------------------------------------------------------------
     op.create_table(
         'post_comments',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -197,9 +164,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # post_shares
-    # ------------------------------------------------------------------
     op.create_table(
         'post_shares',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -216,9 +180,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # stories
-    # ------------------------------------------------------------------
     op.create_table(
         'stories',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -231,9 +192,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # user_compressed_images
-    # ------------------------------------------------------------------
     op.create_table(
         'user_compressed_images',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -247,9 +205,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('user_id'),
     )
 
-    # ------------------------------------------------------------------
-    # request_helps
-    # ------------------------------------------------------------------
     op.create_table(
         'request_helps',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -264,9 +219,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
     )
 
-    # ------------------------------------------------------------------
-    # help_applications
-    # ------------------------------------------------------------------
     op.create_table(
         'help_applications',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -281,9 +233,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('request_id', 'applicant_id', name='unique_help_application'),
     )
 
-    # ------------------------------------------------------------------
-    # user_ratings
-    # ------------------------------------------------------------------
     op.create_table(
         'user_ratings',
         sa.Column('id', sa.Integer(), nullable=False),
