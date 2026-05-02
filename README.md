@@ -170,3 +170,10 @@ POST   /api/v1/komek/requests             Create help request
 GET    /api/v1/komek/requests             Browse requests (filter by category)
 POST   /api/v1/komek/requests/{id}/apply  Apply to help
 PATCH  /api/v1/komek/applications/{id}    Accept or reject application
+
+
+## Team Members
+- Kanalbekov Kuanysh 230103101
+- Kultayev Agadil 203103368
+- Seidaly Burkit 230103108
+- Amankossov Mukagali 230103162
