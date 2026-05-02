@@ -5,13 +5,11 @@ from ..db.models import User
 from ..users.dependencies import get_current_user
 from ..db.main import get_session
 from .ConversationService import ConversationService
-from ..groups.GroupService import GroupService
 from ..messages.MessageService import MessageService  
 
 conversation_router = APIRouter()
 conversation_service = ConversationService()
 message_service = MessageService() 
-group_service = GroupService()
 
 @conversation_router.post("/conversations")
 async def create_conversation(
@@ -49,12 +47,3 @@ async def get_conversation_with_messages(
     
     messages = await message_service.get_conversation_messages(conversation_id, session)
     return {"conversation": conversation, "messages": messages}
-
-@conversation_router.get("/users/{user_id}/inbox")
-async def get_inbox(current_user: User = Depends(get_current_user), session: AsyncSession = Depends(get_session)):
-    conversations = await conversation_service.get_user_conversations(current_user.id, session)
-    groups = await group_service.get_user_groups(current_user.id, session)
-    return {
-        "conversations": conversations,
-        "group_chats": groups
-    }
