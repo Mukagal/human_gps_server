@@ -37,8 +37,8 @@ async def lifespan(app: FastAPI):
 version = 'v1'
 
 app = FastAPI(
-    title="MessaGe",
-    description="A REST API for a Chat Application",
+    title="MamanTap",
+    description="A REST API for a Maman Tap Application",
     version= version,
     lifespan=lifespan
 )
