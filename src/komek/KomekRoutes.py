@@ -45,6 +45,18 @@ async def my_applications(
 ):
     return await service.get_my_applications(current_user.id, session)
 
+@komek_router.get("/requests/nearby",response_model=list[KomekNearbyOut])
+async def get_nearby_requests(
+    latitude: float = Query(..., ge=-90, le=90),
+    longitude: float = Query(..., ge=-180, le=180),
+    radius_km: float = Query(default=20.0, gt=0, le=500),
+    category: Optional[HelpCategory] = Query(default=None),
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    
+):
+    return await service.get_nearby_requests(latitude, longitude, radius_km, category, session)
+
 
 @komek_router.get("/requests/{request_id}", response_model=KomekOut)
 async def get_request(
@@ -106,17 +118,6 @@ async def complete_request(
 ):
     return await service.complete_request(request_id, current_user.id, session)
 
-@komek_router.get("/requests/nearby",response_model=list[KomekNearbyOut])
-async def get_nearby_requests(
-    latitude: float = Query(..., ge=-90, le=90),
-    longitude: float = Query(..., ge=-180, le=180),
-    radius_km: float = Query(default=20.0, gt=0, le=500),
-    category: Optional[HelpCategory] = Query(default=None),
-    session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-    
-):
-    return await service.get_nearby_requests(latitude, longitude, radius_km, category, session)
 
 @komek_router.post("/ratings", response_model=UserRatingOut, status_code=201)
 async def submit_rating(
